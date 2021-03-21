@@ -1,10 +1,11 @@
-from flask import Flask, request, send_file, render_template, redirect
+from flask import Flask, request,abort, send_from_directory, render_template, redirect
 import pandas as pd
 from werkzeug.utils import secure_filename
 import os
 
 images_folder = os.path.join('static', 'images')
 file_folder = os.path.join('data')
+csv_folder = os.path.join('output_data')
 
 def predict_fraud(file):
     df = pd.read_csv(file, engine='python')
@@ -36,16 +37,16 @@ def root():
     image_5 = os.path.join(app.config['images_folder'], 'timeVStransc.png')
     return render_template("index.html", image_1=image_1, image_2=image_2, image_3=image_3, image_4=image_4, image_5=image_5)
 
-@app.route("/data", methods=["POST"])
-def post_data():
-    # get the test file from user
-    csvfile = request.form.get('csvfile')
-
-    result = predict_fraud(csvfile)
-    data = pd.DataFrame(result)
-    data.to_csv("./output_data/result.csv")
-
-    return render_template("result.html", result=result)
+# @app.route("/data", methods=["POST"])
+# def post_data():
+#     # get the test file from user
+#     csvfile = request.form.get('csvfile')
+#
+#     result = predict_fraud(csvfile)
+#     data = pd.DataFrame(result)
+#     data.to_csv("./output_data/result.csv")
+#
+#     return render_template("result.html", result=result)
 
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
@@ -61,10 +62,16 @@ def upload_file():
 
         return render_template('result.html', result=result)
 
-# @app.route("/output_data")
-# def download_data():
-#     output = os.path.join(app.config['output_folder'], 'result.csv')
-#     return render_template(output=output)
+app.config["CSV_FILE"] = csv_folder
+
+@app.route("/get-csv/<filename>")
+def get_csv(filename):
+    try:
+        return send_from_directory(
+            app.config["CSV_FILE"], filename=filename, as_attachment=True
+        )
+    except FileNotFoundError:
+        abort(404)
 
 # start the app
 if __name__ == "__main__":

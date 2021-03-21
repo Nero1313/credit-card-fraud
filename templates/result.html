@@ -61,13 +61,11 @@
 </div>
 
 <div id="Result" class="tabcontent">
-<form method="POST" action = "test">
+<form method="GET" action = "/get-csv/result.csv">
     <div class = "form-group">
-        <h3>The predicted output is:</h3>
-        <text>{{result}}</text>
-        <a href="../output_data/result.csv" download="result.csv">
-            <button class="btn"><i class="fa fa-download"></i> Download</button>
-        </a>
+        <h3>You can download the predicted output as .csv file</h3>
+<!--        <text>{{result}}</text>-->
+            <button class="btn btn-primary"><i class="fa fa-download"></i> Download</button>
     </div>
 </form>
 </div>
