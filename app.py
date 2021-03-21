@@ -6,8 +6,8 @@ import os
 images_folder = os.path.join('static', 'images')
 file_folder = os.path.join('data')
 
-def predict_fraud(csvfile):
-    df = pd.read_csv(csvfile, engine='python')
+def predict_fraud(file):
+    df = pd.read_csv(file, engine='python')
     df = df.drop(['Time'], axis=1)
     X = df.iloc[:, :].values
     from sklearn.preprocessing import StandardScaler
@@ -51,8 +51,15 @@ def post_data():
 def upload_file():
     if request.method == 'POST':
         f = request.files['file1']
+        f.filename='test.csv'
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
-        return render_template('result.html')
+
+        file = os.path.join(app.config['UPLOAD_FOLDER'], 'test.csv')
+        result = predict_fraud(file)
+        data = pd.DataFrame(result)
+        data.to_csv("./output_data/result.csv")
+
+        return render_template('result.html', result=result)
 
 # @app.route("/output_data")
 # def download_data():
