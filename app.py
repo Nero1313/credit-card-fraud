@@ -26,17 +26,18 @@ app = Flask(__name__)
 # static routing
 app.config['images_folder'] = images_folder
 app.config['UPLOAD_FOLDER'] = file_folder
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+
 
 # route: mapping of the http method and the path
 @app.route("/", methods=["GET"])
 def root():
-    image_1 = os.path.join(app.config['images_folder'], 'Figure_3.png')
-    image_2 = os.path.join(app.config['images_folder'], 'fraud_transaction.png')
-    image_3 = os.path.join(app.config['images_folder'], 'heatmap.png')
-    image_4 = os.path.join(app.config['images_folder'], 'legitimate_transaction.png')
-    image_5 = os.path.join(app.config['images_folder'], 'timeVStransc.png')
-    return render_template("index.html", image_1=image_1, image_2=image_2, image_3=image_3, image_4=image_4, image_5=image_5)
-
+    image_1 = os.path.join(app.config['images_folder'], 'one.png')
+    image_2 = os.path.join(app.config['images_folder'], 'two.png')
+    image_3 = os.path.join(app.config['images_folder'], 'three.png')
+    image_4 = os.path.join(app.config['images_folder'], 'four.png')
+    return render_template("index.html", image_1=image_1, image_2=image_2, image_3=image_3, image_4=image_4)
 # @app.route("/data", methods=["POST"])
 # def post_data():
 #     # get the test file from user
